@@ -13,7 +13,11 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $stmt = $pdo->prepare("
+    $city = isset($_GET['city']) ? $_GET['city'] : '';
+    $rating = isset($_GET['rating']) ? (int)$_GET['rating'] : 0;
+    $minPrice = isset($_GET['minPrice']) ? (int)$_GET['minPrice'] : 0;
+
+    $sql = "
         SELECT 
             h.id, 
             h.name, 
@@ -25,11 +29,32 @@ try {
         FROM hotels h
         JOIN img i ON h.id = i.hotel_id
         WHERE i.alt = 'hotel-cover'
-    ");
-    $stmt->execute();
+    ";
+
+    $conditions = [];
+    $params = [];
+
+    if ($city) {
+        $conditions[] = "h.city LIKE :city";
+        $params[':city'] = '%' . $city . '%';
+    }
+    if ($rating) {
+        $conditions[] = "h.rating >= :rating";
+        $params[':rating'] = $rating;
+    }
+    if ($minPrice) {
+        $conditions[] = "h.std_price >= :minPrice";
+        $params[':minPrice'] = $minPrice;
+    }
+
+    if ($conditions) {
+        $sql .= ' AND ' . implode(' AND ', $conditions);
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
     $hotels = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Замінюємо зворотні слеші на прямі
     foreach ($hotels as &$hotel) {
         $hotel['img_src'] = str_replace('\\', '/', $hotel['img_src']);
     }
