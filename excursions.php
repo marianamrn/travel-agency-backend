@@ -32,17 +32,21 @@ try {
     $input = json_decode(file_get_contents('php://input'), true);
 
     if ($input) {
-        if (!empty($input['city'])) {
-            $query .= " AND e.city = :city";
-            $params['city'] = $input['city'];
+        if (!empty($input['location'])) {
+            $query .= " AND e.city = :location";
+            $params['location'] = $input['location'];
         }
         if (!empty($input['date'])) {
             $query .= " AND e.date = :date";
             $params['date'] = $input['date'];
         }
-        if (!empty($input['language'])) {
-            $query .= " AND e.language = :language";
-            $params['language'] = $input['language'];
+        if (!empty($input['duration'])) {
+            $query .= " AND e.duration = :duration";
+            $params['duration'] = $input['duration'];
+        }
+        if (!empty($input['category'])) {
+            $query .= " AND e.category = :category";
+            $params['category'] = $input['category'];
         }
         if (!empty($input['price_min'])) {
             $query .= " AND e.price >= :price_min";
