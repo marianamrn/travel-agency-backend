@@ -18,7 +18,10 @@ if ($conn->connect_error) {
 }
 
 // Виконання SQL запиту
-$sql = "SELECT id, tour_id, src, alt FROM tours_img";
+$sql = "SELECT img.id, img.src, img.alt 
+        FROM tours 
+        JOIN img ON tours.id = img.tour_id 
+        WHERE img.alt = 'tour-cover'";
 $result = $conn->query($sql);
 
 $images = array();
