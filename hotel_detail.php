@@ -26,7 +26,7 @@ try {
     $images = $stmt_images->fetchAll(PDO::FETCH_ASSOC);
 
     if ($hotel) {
-        $hotel['img_src'] = $hotel['img_src'] ?? ''; // Встановіть значення за замовчуванням, якщо img_src не встановлений
+        $hotel['img_src'] = $hotel['img_src'] ?? ''; 
         echo json_encode(['hotel' => $hotel, 'images' => $images]);
     } else {
         echo json_encode(['error' => 'Hotel not found']);
